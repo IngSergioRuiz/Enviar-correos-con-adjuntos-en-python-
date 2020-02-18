@@ -1,0 +1,32 @@
+#Importamos librerias para enviar adjuntos
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+#Importamos servidor dde correo
+from smtplib import SMTP
+#Importamos funcion para codificar el archivo adjunto y se pueda enviar
+from email import encoders
+
+#Creamos el mensaje
+mensaje = MIMEMultipart("plain")
+# Contenido del mensaje = de- para - asunto
+mensaje["From"]="ingenierosergioruiz@gmail.com"
+mensaje["To"]= "ingenierosergioruiz@gmail.com"
+mensaje["Subject"] ="Correo de prueba desde Python 3"
+
+# Codificaremos la informacion del archivo adjunto
+adjunto = MIMEBase("application","octect-stream")
+# Debemos abrir el archivo - "name del archivo" rb = lectura
+adjunto.set_payload(open("clean cv.docx","rb").read())
+# Codificarmos el archivo adjunto para que se pueda enviar
+encoders.encode_base64(adjunto)
+# Editaremos la cabecera del adjunto - y filename = es el nombre del archivo
+adjunto.add_header("content-Disposition",'attachment; filename="mensaje.txt"')
+#Adjuntamos el mensaje
+mensaje.attach(adjunto)
+
+# Iniciamos el servidor de correo
+smtp = SMTP("smtp.gmail.com")
+smtp.starttls()
+smtp.login("ingenierosergioruiz@gmail.com","Checho13")
+smtp.sendmail("ingenierosergioruiz@gmail.com","sdruiz@uniboyaca.edu.co", mensaje.as_string())
+smtp.quit()
